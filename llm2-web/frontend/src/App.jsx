@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import Chat from './Chat.jsx';
-import { sendMessage } from './api.js';
-import './App.css'; // We'll create this for basic App layout styling
+import Chat from './Chat.jsx'; // Assuming Chat.jsx is in the same directory
+import { sendMessage } from './api.js'; // Assuming api.js is in the same directory
+import './App.css';
+
+const CHAT_HISTORY_KEY = 'chatHistory';
 
 function App() {
   const [messages, setMessages] = useState([]);
@@ -9,18 +11,41 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
-  // Optional: Load chat history from localStorage if we implement that later
-  // useEffect(() => {
-  //   const storedMessages = localStorage.getItem('chatHistory');
-  //   if (storedMessages) {
-  //     setMessages(JSON.parse(storedMessages));
-  //   }
-  // }, []);
+  // Load chat history from localStorage when the component mounts
+  useEffect(() => {
+    try {
+      const storedMessages = localStorage.getItem(CHAT_HISTORY_KEY);
+      if (storedMessages) {
+        const parsedMessages = JSON.parse(storedMessages);
+        // Basic validation: check if it's an array
+        if (Array.isArray(parsedMessages)) {
+          setMessages(parsedMessages);
+        } else {
+          console.warn("Stored chat history is not an array, ignoring.");
+          localStorage.removeItem(CHAT_HISTORY_KEY); // Clear invalid data
+        }
+      }
+    } catch (e) {
+      console.error("Failed to parse chat history from localStorage:", e);
+      localStorage.removeItem(CHAT_HISTORY_KEY); // Clear corrupted data
+    }
+  }, []); // Empty dependency array ensures this runs only once on mount
 
-  // Optional: Save chat history to localStorage
-  // useEffect(() => {
-  //   localStorage.setItem('chatHistory', JSON.stringify(messages));
-  // }, [messages]);
+  // Save chat history to localStorage whenever messages change
+  useEffect(() => {
+    try {
+      // Don't save if messages is empty, unless you want to explicitly clear it
+      if (messages.length > 0) {
+        localStorage.setItem(CHAT_HISTORY_KEY, JSON.stringify(messages));
+      } else {
+        // If messages become empty (e.g., after a clear chat feature not yet implemented),
+        // remove the item from localStorage.
+        localStorage.removeItem(CHAT_HISTORY_KEY);
+      }
+    } catch (e) {
+      console.error("Failed to save chat history to localStorage:", e);
+    }
+  }, [messages]); // This effect runs whenever the 'messages' state changes
 
   const handleInputChange = (event) => {
     setInput(event.target.value);
@@ -31,34 +56,39 @@ function App() {
     if (!input.trim()) return;
 
     const userMessage = {
-      id: Date.now(),
+      id: Date.now(), // Simple unique ID
       text: input,
       sender: 'user',
     };
+    // Add user message to state first for immediate UI update
     setMessages((prevMessages) => [...prevMessages, userMessage]);
+
     setIsLoading(true);
     setError('');
-    setInput(''); // Clear input field immediately
+    const currentInput = input; // Store input before clearing
+    setInput(''); // Clear input field
 
     try {
-      const assistantResponseText = await sendMessage(input);
+      const assistantResponseText = await sendMessage(currentInput); // Use stored input
       const assistantMessage = {
-        id: Date.now() + 1, // Ensure unique ID
+        id: Date.now() + 1, // Ensure unique ID if responses are very fast
         text: assistantResponseText,
         sender: 'assistant',
       };
       setMessages((prevMessages) => [...prevMessages, assistantMessage]);
     } catch (err) {
       console.error("Error in App.jsx handleSubmit:", err);
-      setError(err.message || 'Failed to get response from assistant.');
-      // Optionally add the error as a message in the chat
-      const errorMessage = {
+      const errorMessageText = err.message || 'Failed to get response from assistant.';
+      setError(errorMessageText); // Set error state to display to user
+
+      // Optionally, add the error message to the chat display as well
+      const errorMessageForChat = {
         id: Date.now() + 1,
-        text: \`Error: \${err.message || 'Failed to get response'}\`,
+        text: \`Error: \${errorMessageText}\`,
         sender: 'assistant', // Or a special 'error' sender type
-        isError: true, // Custom flag
+        isError: true,
       };
-      setMessages((prevMessages) => [...prevMessages, errorMessage]);
+      setMessages((prevMessages) => [...prevMessages, errorMessageForChat]);
     } finally {
       setIsLoading(false);
     }
