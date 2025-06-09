@@ -1,42 +1,103 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+body, html, #root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: sans-serif;
+  background-color: #f0f0f0;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* Full viewport height */
+  max-width: 800px; /* Max width of the chat app */
+  margin: 0 auto; /* Center the app */
+  background-color: #ffffff;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.app-header {
+  background-color: #007bff;
+  color: white;
+  padding: 15px;
   text-align: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.chat-wrapper {
+  flex-grow: 1; /* Takes up available space */
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  overflow: hidden; /* Prevents chat content from overflowing wrapper */
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Modify Chat.jsx's container style or ensure it fits well */
+/* For example, if Chat.jsx has a fixed height, ensure it's relative to chat-wrapper */
+/* The Chat component itself will handle its internal scrolling */
+
+.loading-indicator {
+  padding: 10px;
+  text-align: center;
+  color: #555;
+  font-style: italic;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.error-message {
+  padding: 10px;
+  text-align: center;
+  color: red;
+  background-color: #ffe0e0;
+  border: 1px solid red;
+  border-radius: 4px;
+  margin: 5px 0;
 }
 
-.card {
-  padding: 2em;
+.message-form {
+  display: flex;
+  padding: 10px;
+  border-top: 1px solid #ccc;
+  background-color: #f9f9f9;
 }
 
-.read-the-docs {
-  color: #888;
+.message-input {
+  flex-grow: 1;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  margin-right: 10px;
+  font-size: 1em;
 }
+
+.send-button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 1em;
+}
+
+.send-button:disabled {
+  background-color: #aaa;
+}
+
+.app-footer {
+  padding: 10px;
+  text-align: center;
+  font-size: 0.8em;
+  color: #777;
+  border-top: 1px solid #eee;
+}
+
+/* Ensure Chat.jsx's styles are compatible or adjust them here/there */
+/* For example, Chat.jsx styles: */
+/* const styles = {
+  chatContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    flexGrow: 1, // Make Chat.jsx's container grow
+    overflowY: 'auto', // Scroll within Chat.jsx
+    padding: '10px',
+    // Removed fixed border and bg as chat-wrapper now handles this
+  }, ... */
