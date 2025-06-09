@@ -21,10 +21,11 @@ app.post('/api/chat', async (req, res) => {
   }
 
   try {
-    console.log(\`[Backend] Received message: "\${mensaje}"\`);
-    // runAgent will be imported from agent.js, which wraps elAgente.js
+    // Corrected console.log line with proper backticks
+    console.log(`[Backend] Received message: "${mensaje}"`);
     const respuesta = await runAgent(mensaje);
-    console.log(\`[Backend] Sending response: "\${respuesta}"\`);
+    // Corrected console.log line with proper backticks
+    console.log(`[Backend] Sending response: "${respuesta}"`);
     res.json({ respuesta });
   } catch (error) {
     console.error('[Backend] Error processing chat request:', error);
@@ -34,5 +35,6 @@ app.post('/api/chat', async (req, res) => {
 
 // Start server
 app.listen(port, () => {
-  console.log(\`Servidor backend escuchando en http://localhost:\${port}\`);
+  // Corrected console.log line with proper backticks
+  console.log(`Servidor backend escuchando en http://localhost:${port}`);
 });

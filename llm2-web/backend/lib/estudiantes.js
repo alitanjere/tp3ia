@@ -18,7 +18,8 @@ export class Estudiantes {
             const jsonData = fs.readFileSync(JSON_PATH, 'utf-8');
             const data = JSON.parse(jsonData);
             this.estudiantes = data.alumnos || [];
-            console.log("Estudiantes cargados desde JSON:", this.estudiantes.length);
+            // Corrected console.log with proper backticks (if any were planned here, adding for safety)
+            console.log(`Estudiantes cargados desde JSON: ${this.estudiantes.length}`);
         } catch (error) {
             console.error("Error al cargar estudiantes desde JSON:", error);
             this.estudiantes = [];
@@ -29,7 +30,7 @@ export class Estudiantes {
         try {
             const dataToSave = { alumnos: this.estudiantes };
             fs.writeFileSync(JSON_PATH, JSON.stringify(dataToSave, null, 2), 'utf-8');
-            console.log("Estudiantes guardados en JSON.");
+            console.log("Estudiantes guardados en JSON."); // This was likely fine
         } catch (error) {
             console.error("Error al guardar estudiantes en JSON:", error);
         }
@@ -37,19 +38,22 @@ export class Estudiantes {
 
     buscarEstudiantePorNombre(nombre) {
         const resultados = this.estudiantes.filter(est => est.nombre.toLowerCase().includes(nombre.toLowerCase()));
-        return resultados.length > 0 ? resultados : \`No se encontraron estudiantes con el nombre "\${nombre}".\`;
+        // Corrected template literal
+        return resultados.length > 0 ? resultados : `No se encontraron estudiantes con el nombre "${nombre}".`;
     }
 
     buscarEstudiantePorApellido(apellido) {
         const resultados = this.estudiantes.filter(est => est.apellido.toLowerCase().includes(apellido.toLowerCase()));
-        return resultados.length > 0 ? resultados : \`No se encontraron estudiantes con el apellido "\${apellido}".\`;
+        // Corrected template literal
+        return resultados.length > 0 ? resultados : `No se encontraron estudiantes con el apellido "${apellido}".`;
     }
 
     agregarEstudiante(nombre, apellido, curso) {
         const nuevoEstudiante = { nombre, apellido, curso };
         this.estudiantes.push(nuevoEstudiante);
-        this.guardarEstudiantesEnJson(); // Guardar cambios
-        return \`Estudiante \${nombre} \${apellido} agregado correctamente al curso \${curso}.\`;
+        this.guardarEstudiantesEnJson();
+        // Corrected template literal
+        return `Estudiante ${nombre} ${apellido} agregado correctamente al curso ${curso}.`;
     }
 
     listarEstudiantes() {
