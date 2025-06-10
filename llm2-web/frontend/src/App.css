@@ -101,3 +101,65 @@ body, html, #root {
     padding: '10px',
     // Removed fixed border and bg as chat-wrapper now handles this
   }, ... */
+
+/* New Loading Spinner Styles */
+.spinner-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  margin-top: 5px; /* Space from chat bubbles */
+  margin-bottom: 5px; /* Space from input form */
+}
+
+.loading-spinner {
+  border: 4px solid #f3f3f3; /* Light grey */
+  border-top: 4px solid #007bff; /* Blue */
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  animation: spin 1s linear infinite;
+  margin-right: 10px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-text {
+  font-style: italic;
+  color: #555;
+}
+
+/* Settings Bar Styles */
+.settings-bar {
+  padding: 8px 15px;
+  background-color: #f0f0f0; /* Slightly different from header to distinguish */
+  display: flex;
+  align-items: center;
+  gap: 15px; /* Space between items */
+  font-size: 0.9em;
+  border-bottom: 1px solid #ddd;
+  color: #333; /* Text color for labels */
+}
+
+.settings-bar label {
+  margin-right: 5px;
+}
+
+.settings-bar input[type="text"],
+.settings-bar input[type="number"] {
+  padding: 4px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+.settings-bar input[type="text"] {
+  width: 150px; /* Adjust as needed */
+}
+
+.settings-bar input[type="number"] {
+  width: 70px; /* Adjust as needed */
+}

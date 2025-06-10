@@ -1,30 +1,31 @@
 import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
-// agent.js will be created in the next step, it will export runAgent
-import { runAgent } from './agent.js';
+import { runAgent } from './agent.js'; // runAgent will be updated
 
 const app = express();
 const port = 3001;
 
-// Middleware
-app.use(cors()); // Enable CORS for all routes
-app.use(express.json()); // Parse JSON request bodies
-app.use(morgan('dev')); // HTTP request logger
+app.use(cors());
+app.use(express.json());
+app.use(morgan('dev'));
 
-// POST endpoint for chat
 app.post('/api/chat', async (req, res) => {
-  const { mensaje } = req.body;
+  // Destructure all expected parts from the body
+  const { mensaje, model, temperature } = req.body;
 
   if (!mensaje) {
     return res.status(400).json({ error: 'El campo "mensaje" es requerido.' });
   }
 
+  // Validate model and temperature if necessary, or rely on agent.js defaults/validation
+  // For now, pass them as is. Agent.js will use defaults if they are undefined.
+
   try {
-    console.log(\`[Backend] Received message: "\${mensaje}"\`);
-    // runAgent will be imported from agent.js, which wraps elAgente.js
-    const respuesta = await runAgent(mensaje);
-    console.log(\`[Backend] Sending response: "\${respuesta}"\`);
+    console.log(`[Backend] Received message: "${mensaje}", model: ${model}, temperature: ${temperature}`);
+    // Pass model and temperature to runAgent
+    const respuesta = await runAgent(mensaje, model, temperature);
+    console.log(`[Backend] Sending response: "${respuesta}"`);
     res.json({ respuesta });
   } catch (error) {
     console.error('[Backend] Error processing chat request:', error);
@@ -32,7 +33,6 @@ app.post('/api/chat', async (req, res) => {
   }
 });
 
-// Start server
 app.listen(port, () => {
-  console.log(\`Servidor backend escuchando en http://localhost:\${port}\`);
+  console.log(`Servidor backend escuchando en http://localhost:${port}`);
 });
